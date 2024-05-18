@@ -35,17 +35,19 @@ export default function CollectionLayout({
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <ConnectKitProvider>
-          <Layout className="h-screen">
-            <Header className="!p-3">
+          <Layout className="h-screen !bg-[#281e35]">
+            {/* <Header className="!p-3 !bg-[#281e35]">
               <Flex className="h-full"
                 justify="space-between"
                 align="center">
                 <Link href="/">
-                  {/* <GenealogyTreeLogo className="w-12" /> */}
                 </Link>
-                <ConnectKitButton />
+
               </Flex>
-            </Header>
+            </Header> */}
+            <div className="fixed top-3 right-3">
+              <ConnectKitButton />
+            </div>
             <Content className="h-full overflow-auto no-scrollbar">
               {children}
             </Content>

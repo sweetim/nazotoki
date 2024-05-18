@@ -3,7 +3,7 @@ import "./globals.css"
 import type { Metadata } from "next";
 import { Mali } from "next/font/google";
 import { AntdRegistry } from '@ant-design/nextjs-registry';
-import { ConfigProvider, ThemeConfig } from 'antd';
+import { ConfigProvider, ThemeConfig, theme } from 'antd';
 
 
 const mali = Mali({

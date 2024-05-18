@@ -1,13 +1,13 @@
 import { defineConfig } from '@wagmi/cli'
 import { react } from '@wagmi/cli/plugins'
-import { puzzleAbi } from "./PuzzleAbi"
+import { abi } from "./Riddle.json"
 
 export default defineConfig({
   out: 'src/generated.ts',
   contracts: [
     {
-      name: 'Puzzle',
-      abi: puzzleAbi.abi as any,
+      name: 'Riddle',
+      abi: abi as any,
     },
   ],
   plugins: [

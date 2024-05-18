@@ -6,14 +6,18 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "pregenerate": "cp ../contract/artifacts-zk/contracts/Riddle.sol/Riddle.json .",
+    "generate": "npx wagmi generate"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.3.7",
     "@ant-design/nextjs-registry": "^1.0.0",
     "@tanstack/react-query": "^5.36.2",
     "antd": "^5.17.2",
     "connectkit": "^1.7.3",
     "next": "14.2.3",
+    "pino-pretty": "^11.0.0",
     "react": "^18",
     "react-dom": "^18",
     "viem": "^2.10.8",

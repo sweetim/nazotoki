@@ -5,17 +5,17 @@ import {
 } from 'wagmi/codegen'
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Puzzle
+// Riddle
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const puzzleAbi = [
+export const riddleAbi = [
   { type: 'constructor', inputs: [], stateMutability: 'nonpayable' },
   {
     type: 'function',
     inputs: [
       {
         name: 'item',
-        internalType: 'struct Puzzle.PuzzleItem',
+        internalType: 'struct Riddle.RiddleItem',
         type: 'tuple',
         components: [
           { name: 'title', internalType: 'string', type: 'string' },
@@ -23,13 +23,13 @@ export const puzzleAbi = [
           { name: 'uri', internalType: 'string', type: 'string' },
           {
             name: 'answers',
-            internalType: 'struct Puzzle.PuzzleAnswer',
+            internalType: 'struct Riddle.RiddleAnswer',
             type: 'tuple',
             components: [
-              { name: 'answers_1', internalType: 'string', type: 'string' },
-              { name: 'answers_2', internalType: 'string', type: 'string' },
-              { name: 'answers_3', internalType: 'string', type: 'string' },
-              { name: 'answers_4', internalType: 'string', type: 'string' },
+              { name: 'answer_1', internalType: 'string', type: 'string' },
+              { name: 'answer_2', internalType: 'string', type: 'string' },
+              { name: 'answer_3', internalType: 'string', type: 'string' },
+              { name: 'answer_4', internalType: 'string', type: 'string' },
             ],
           },
         ],
@@ -46,7 +46,7 @@ export const puzzleAbi = [
     outputs: [
       {
         name: '',
-        internalType: 'struct Puzzle.PuzzleItem',
+        internalType: 'struct Riddle.RiddleItem',
         type: 'tuple',
         components: [
           { name: 'title', internalType: 'string', type: 'string' },
@@ -54,19 +54,26 @@ export const puzzleAbi = [
           { name: 'uri', internalType: 'string', type: 'string' },
           {
             name: 'answers',
-            internalType: 'struct Puzzle.PuzzleAnswer',
+            internalType: 'struct Riddle.RiddleAnswer',
             type: 'tuple',
             components: [
-              { name: 'answers_1', internalType: 'string', type: 'string' },
-              { name: 'answers_2', internalType: 'string', type: 'string' },
-              { name: 'answers_3', internalType: 'string', type: 'string' },
-              { name: 'answers_4', internalType: 'string', type: 'string' },
+              { name: 'answer_1', internalType: 'string', type: 'string' },
+              { name: 'answer_2', internalType: 'string', type: 'string' },
+              { name: 'answer_3', internalType: 'string', type: 'string' },
+              { name: 'answer_4', internalType: 'string', type: 'string' },
             ],
           },
         ],
       },
     ],
     stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'increment',
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
     type: 'function',
@@ -85,16 +92,40 @@ export const puzzleAbi = [
       { name: 'uri', internalType: 'string', type: 'string' },
       {
         name: 'answers',
-        internalType: 'struct Puzzle.PuzzleAnswer',
+        internalType: 'struct Riddle.RiddleAnswer',
         type: 'tuple',
         components: [
-          { name: 'answers_1', internalType: 'string', type: 'string' },
-          { name: 'answers_2', internalType: 'string', type: 'string' },
-          { name: 'answers_3', internalType: 'string', type: 'string' },
-          { name: 'answers_4', internalType: 'string', type: 'string' },
+          { name: 'answer_1', internalType: 'string', type: 'string' },
+          { name: 'answer_2', internalType: 'string', type: 'string' },
+          { name: 'answer_3', internalType: 'string', type: 'string' },
+          { name: 'answer_4', internalType: 'string', type: 'string' },
         ],
       },
     ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '', internalType: 'address', type: 'address' }],
+    name: 'rankings',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'index', internalType: 'uint256', type: 'uint256' },
+      { name: 'answer', internalType: 'string', type: 'string' },
+    ],
+    name: 'submitAnswer',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'value',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
 ] as const
@@ -104,63 +135,113 @@ export const puzzleAbi = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link puzzleAbi}__
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link riddleAbi}__
  */
-export const useReadPuzzle = /*#__PURE__*/ createUseReadContract({
-  abi: puzzleAbi,
+export const useReadRiddle = /*#__PURE__*/ createUseReadContract({
+  abi: riddleAbi,
 })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link puzzleAbi}__ and `functionName` set to `"getItem"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link riddleAbi}__ and `functionName` set to `"getItem"`
  */
-export const useReadPuzzleGetItem = /*#__PURE__*/ createUseReadContract({
-  abi: puzzleAbi,
+export const useReadRiddleGetItem = /*#__PURE__*/ createUseReadContract({
+  abi: riddleAbi,
   functionName: 'getItem',
 })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link puzzleAbi}__ and `functionName` set to `"itemIndex"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link riddleAbi}__ and `functionName` set to `"itemIndex"`
  */
-export const useReadPuzzleItemIndex = /*#__PURE__*/ createUseReadContract({
-  abi: puzzleAbi,
+export const useReadRiddleItemIndex = /*#__PURE__*/ createUseReadContract({
+  abi: riddleAbi,
   functionName: 'itemIndex',
 })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link puzzleAbi}__ and `functionName` set to `"items"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link riddleAbi}__ and `functionName` set to `"items"`
  */
-export const useReadPuzzleItems = /*#__PURE__*/ createUseReadContract({
-  abi: puzzleAbi,
+export const useReadRiddleItems = /*#__PURE__*/ createUseReadContract({
+  abi: riddleAbi,
   functionName: 'items',
 })
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link puzzleAbi}__
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link riddleAbi}__ and `functionName` set to `"rankings"`
  */
-export const useWritePuzzle = /*#__PURE__*/ createUseWriteContract({
-  abi: puzzleAbi,
+export const useReadRiddleRankings = /*#__PURE__*/ createUseReadContract({
+  abi: riddleAbi,
+  functionName: 'rankings',
 })
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link puzzleAbi}__ and `functionName` set to `"createItem"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link riddleAbi}__ and `functionName` set to `"value"`
  */
-export const useWritePuzzleCreateItem = /*#__PURE__*/ createUseWriteContract({
-  abi: puzzleAbi,
+export const useReadRiddleValue = /*#__PURE__*/ createUseReadContract({
+  abi: riddleAbi,
+  functionName: 'value',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link riddleAbi}__
+ */
+export const useWriteRiddle = /*#__PURE__*/ createUseWriteContract({
+  abi: riddleAbi,
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link riddleAbi}__ and `functionName` set to `"createItem"`
+ */
+export const useWriteRiddleCreateItem = /*#__PURE__*/ createUseWriteContract({
+  abi: riddleAbi,
   functionName: 'createItem',
 })
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link puzzleAbi}__
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link riddleAbi}__ and `functionName` set to `"increment"`
  */
-export const useSimulatePuzzle = /*#__PURE__*/ createUseSimulateContract({
-  abi: puzzleAbi,
+export const useWriteRiddleIncrement = /*#__PURE__*/ createUseWriteContract({
+  abi: riddleAbi,
+  functionName: 'increment',
 })
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link puzzleAbi}__ and `functionName` set to `"createItem"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link riddleAbi}__ and `functionName` set to `"submitAnswer"`
  */
-export const useSimulatePuzzleCreateItem =
+export const useWriteRiddleSubmitAnswer = /*#__PURE__*/ createUseWriteContract({
+  abi: riddleAbi,
+  functionName: 'submitAnswer',
+})
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link riddleAbi}__
+ */
+export const useSimulateRiddle = /*#__PURE__*/ createUseSimulateContract({
+  abi: riddleAbi,
+})
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link riddleAbi}__ and `functionName` set to `"createItem"`
+ */
+export const useSimulateRiddleCreateItem =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: puzzleAbi,
+    abi: riddleAbi,
     functionName: 'createItem',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link riddleAbi}__ and `functionName` set to `"increment"`
+ */
+export const useSimulateRiddleIncrement =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: riddleAbi,
+    functionName: 'increment',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link riddleAbi}__ and `functionName` set to `"submitAnswer"`
+ */
+export const useSimulateRiddleSubmitAnswer =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: riddleAbi,
+    functionName: 'submitAnswer',
   })
