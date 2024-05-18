@@ -3,9 +3,10 @@
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
 import { Button, Card, Flex, Form, FormProps, Input } from "antd"
 import { FC } from "react"
-import { useWriteRiddleCreateItem, useReadRiddleItems, riddleAbi } from "@/generated"
-import { CONTRACT_ADDRESS, RiddleItem, RiddleItemGeneric } from "@/app/contract"
+import { useWriteRiddleCreateItem, useReadRiddleItems, riddleAbi, useReadRiddleItemIndex } from "@/generated"
+import { CONTRACT_ADDRESS, RiddleItem, RiddleItemGeneric } from "@/contract"
 import { useReadContracts } from "wagmi"
+import { useRouter } from "next/navigation"
 
 const formItemLayout = {
   labelCol: {
@@ -26,9 +27,14 @@ const formItemLayoutWithOutLabel = {
 };
 
 const CreateRiddle: FC = () => {
-  const { writeContractAsync } = useWriteRiddleCreateItem()
-  // const { writeContract } = useWriteRiddleIncrement()
+  const router = useRouter()
 
+  const { writeContractAsync } = useWriteRiddleCreateItem()
+  const { data: itemIndex, isSuccess } = useReadRiddleItemIndex({
+    address: CONTRACT_ADDRESS
+  })
+  // const { writeContract } = useWriteRiddleIncrement()
+  console.log(itemIndex, isSuccess)
   const onFinish: FormProps<RiddleItemGeneric<string[]>>["onFinish"] = async (values) => {
     const { answers, ...others } = values
     const riddleItem: RiddleItem = {
@@ -41,15 +47,17 @@ const CreateRiddle: FC = () => {
       }
     }
 
-    writeContractAsync({
+    await writeContractAsync({
       address: CONTRACT_ADDRESS,
       args: [riddleItem]
     })
 
+    router.push(`/riddle/${Number(itemIndex)}`)
+
   }
 
   return (
-    <div className="bg-white p-5 rounded-xl shadow-lg h-full overflow-auto">
+    <div className="bg-white p-5 rounded-xl shadow-lg h-full w-full overflow-auto">
       <Form
         {...formItemLayout}
         variant="outlined"
@@ -132,7 +140,7 @@ const CreateRiddle: FC = () => {
         <Flex className="mt-10" vertical align="center" gap="middle">
           <Button className="text-white !px-16 !bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
             type="primary" htmlType="submit">
-            Submit
+            SUBMIT
           </Button>
         </Flex>
       </Form>

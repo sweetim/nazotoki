@@ -19,7 +19,6 @@ contract Riddle {
   }
 
   uint public itemIndex;
-  uint public value;
 
   mapping(uint => RiddleItem) public items;
   mapping(address => uint) public rankings;
@@ -35,10 +34,6 @@ contract Riddle {
 
   function getItem(uint index) public view returns(RiddleItem memory) {
     return items[index];
-  }
-
-  function increment() public {
-    value += 1;
   }
 
   function submitAnswer(uint index, string calldata answer) public returns (bool) {

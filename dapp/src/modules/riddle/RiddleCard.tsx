@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { CONTRACT_ADDRESS, RIDDLE_CONTRACTS, RiddleItem } from "@/app/contract"
+import { CONTRACT_ADDRESS, RIDDLE_CONTRACTS, RiddleItem } from "@/contract"
 import { Button, Card, Col, Divider, Flex, Modal, Radio, Row, Space } from "antd"
 import { FC, useState } from "react"
 import { useReadRiddleGetItem, useWriteRiddleSubmitAnswer } from "@/generated"
@@ -69,7 +69,6 @@ const RiddleCard: FC<RiddleCardProps> = ({ id }) => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-
 
   const renderRiddleAnswer = () => (
     <Card>

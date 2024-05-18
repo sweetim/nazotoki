@@ -71,13 +71,6 @@ export const riddleAbi = [
   {
     type: 'function',
     inputs: [],
-    name: 'increment',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
     name: 'itemIndex',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
@@ -120,13 +113,6 @@ export const riddleAbi = [
     name: 'submitAnswer',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'value',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
   },
 ] as const
 
@@ -174,14 +160,6 @@ export const useReadRiddleRankings = /*#__PURE__*/ createUseReadContract({
 })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link riddleAbi}__ and `functionName` set to `"value"`
- */
-export const useReadRiddleValue = /*#__PURE__*/ createUseReadContract({
-  abi: riddleAbi,
-  functionName: 'value',
-})
-
-/**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link riddleAbi}__
  */
 export const useWriteRiddle = /*#__PURE__*/ createUseWriteContract({
@@ -194,14 +172,6 @@ export const useWriteRiddle = /*#__PURE__*/ createUseWriteContract({
 export const useWriteRiddleCreateItem = /*#__PURE__*/ createUseWriteContract({
   abi: riddleAbi,
   functionName: 'createItem',
-})
-
-/**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link riddleAbi}__ and `functionName` set to `"increment"`
- */
-export const useWriteRiddleIncrement = /*#__PURE__*/ createUseWriteContract({
-  abi: riddleAbi,
-  functionName: 'increment',
 })
 
 /**
@@ -226,15 +196,6 @@ export const useSimulateRiddleCreateItem =
   /*#__PURE__*/ createUseSimulateContract({
     abi: riddleAbi,
     functionName: 'createItem',
-  })
-
-/**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link riddleAbi}__ and `functionName` set to `"increment"`
- */
-export const useSimulateRiddleIncrement =
-  /*#__PURE__*/ createUseSimulateContract({
-    abi: riddleAbi,
-    functionName: 'increment',
   })
 
 /**

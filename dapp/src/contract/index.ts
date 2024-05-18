@@ -1,6 +1,6 @@
 import { riddleAbi } from "@/generated"
 
-export const CONTRACT_ADDRESS = "0x094499Df5ee555fFc33aF07862e43c90E6FEe501"
+export const CONTRACT_ADDRESS = "0x2cEdf0Fb5e1c4985B32712E7f34E13D51ee5589E"
 
 export type RiddleItem = RiddleItemGeneric<RiddleAnswer>
 
