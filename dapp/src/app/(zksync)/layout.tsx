@@ -11,16 +11,15 @@ import { WagmiProvider, createConfig, http } from "wagmi";
 const config = createConfig(
   getDefaultConfig({
     chains: [
+      zkSyncSepoliaTestnet,
       zkSyncInMemoryNode,
-      zkSyncSepoliaTestnet
     ],
     transports: {
-      [zkSyncInMemoryNode.id]: http(),
       [zkSyncSepoliaTestnet.id]: http(),
+      [zkSyncInMemoryNode.id]: http(),
     },
     walletConnectProjectId: "3744d5a2fe976f821f378bdd74fcab66",
     appName: "nazotoki",
-
     // Optional App Info
     appDescription: "puzzle gameFI",
     appUrl: "https://nazotoki.vercel.app/", // your app's url

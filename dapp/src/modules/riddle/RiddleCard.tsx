@@ -5,7 +5,7 @@ import Link from "next/link";
 import { CONTRACT_ADDRESS, RIDDLE_CONTRACTS, RiddleItem } from "@/contract"
 import { Button, Card, Col, Divider, Flex, Modal, Radio, Row, Space } from "antd"
 import { FC, useState } from "react"
-import { useReadRiddleGetItem, useWriteRiddleSubmitAnswer } from "@/generated"
+import { useReadRiddleGetItem, useWriteRiddleSubmitAnswer, useReadRiddleItemIndex } from "@/generated"
 import { Typography } from 'antd';
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
@@ -31,6 +31,10 @@ const RiddleCard: FC<RiddleCardProps> = ({ id }) => {
   const { data, isSuccess } = useReadRiddleGetItem({
     address: CONTRACT_ADDRESS,
     args: [BigInt(id)]
+  })
+
+  const { data: itemIndex, isSuccess: itemIndexIsSuccess } = useReadRiddleItemIndex({
+    address: CONTRACT_ADDRESS
   })
 
   const renderLoading = () => (
@@ -70,6 +74,56 @@ const RiddleCard: FC<RiddleCardProps> = ({ id }) => {
     setIsModalOpen(false);
   };
 
+  const renderRiddleAvailable = () => {
+    return (
+      <>
+        <Title className="text-center">{data!.title}</Title>
+        <Divider className="h-0.5 bg-[#281e35]" />
+        <Paragraph className="max-w-3xl px-10 text-center">
+          {data!.description}
+        </Paragraph>
+        <Flex className="mt-10" vertical align="center" gap="middle">
+          <Space size="large" direction="vertical" align="center">
+            <Radio.Group onChange={(e) => setAnswer(e.target.value)} value={answer} size="large" buttonStyle="solid">
+              <Radio.Button className="!px-12" value={data!.answers.answer_1}>{data!.answers.answer_1}</Radio.Button>
+              <Radio.Button className="!px-12" value={data!.answers.answer_2}>{data!.answers.answer_2}</Radio.Button>
+              <Radio.Button className="!px-12" value={data!.answers.answer_3}>{data!.answers.answer_3}</Radio.Button>
+              <Radio.Button className="!px-12" value={data!.answers.answer_4}>{data!.answers.answer_4}</Radio.Button>
+            </Radio.Group>
+            <Button size="large"
+              shape="round"
+              className="!text-white !px-16 !bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
+              onClick={submitClickHandler}>SUBMIT</Button>
+            <Modal title="CONGRATULATIONS" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+              <p>Your answer is CORRECT</p>
+            </Modal>
+          </Space>
+        </Flex>
+      </>
+    )
+  }
+
+  const renderNoRiddleAvailable = () => {
+    return (
+      <>
+        <Title className="text-center">Available</Title>
+        <Divider className="h-0.5 bg-[#281e35]" />
+        <Paragraph className="max-w-3xl px-10 text-center">
+          you can claim this riddle now
+        </Paragraph>
+        <Flex className="mt-10" vertical align="center" gap="middle">
+          <Link href="/create">
+            <Button size="large"
+              shape="round"
+              className="!text-white !px-16 !bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
+              onClick={submitClickHandler}>CLAIM</Button>
+          </Link>
+        </Flex>
+      </>
+    )
+  }
+
+  const isDataAvailable = itemIndex && itemIndex > Number(id)
   const renderRiddleAnswer = () => (
     <Card>
       <Row>
@@ -86,28 +140,9 @@ const RiddleCard: FC<RiddleCardProps> = ({ id }) => {
           </Flex>
         </Col>
         <Col flex="auto">
-          <Title className="text-center">{data!.title}</Title>
-          <Divider className="h-0.5 bg-[#281e35]" />
-          <Paragraph className="max-w-3xl px-10 text-center">
-            {data!.description}
-          </Paragraph>
-          <Flex className="mt-10" vertical align="center" gap="middle">
-            <Space size="large" direction="vertical" align="center">
-              <Radio.Group onChange={(e) => setAnswer(e.target.value)} value={answer} size="large" buttonStyle="solid">
-                <Radio.Button className="!px-12" value={data!.answers.answer_1}>{data!.answers.answer_1}</Radio.Button>
-                <Radio.Button className="!px-12" value={data!.answers.answer_2}>{data!.answers.answer_2}</Radio.Button>
-                <Radio.Button className="!px-12" value={data!.answers.answer_3}>{data!.answers.answer_3}</Radio.Button>
-                <Radio.Button className="!px-12" value={data!.answers.answer_4}>{data!.answers.answer_4}</Radio.Button>
-              </Radio.Group>
-              <Button size="large"
-                shape="round"
-                className="!text-white !px-16 !bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
-                onClick={submitClickHandler}>SUBMIT</Button>
-              <Modal title="CONGRATULATIONS" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-                <p>Your answer is CORRECT</p>
-              </Modal>
-            </Space>
-          </Flex>
+          {isDataAvailable
+            ? renderRiddleAvailable()
+            : renderNoRiddleAvailable()}
         </Col>
         <Col>
           <Flex className="w-full h-full"

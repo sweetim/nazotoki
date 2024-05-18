@@ -35,7 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
-      <body className={`${mali.className} h-full`}>
+      <body className={`${mali.className} h-full bg-[#281e35]`}>
           <ConfigProvider theme={antThemeConfig}>
             <AntdRegistry>{children}</AntdRegistry>
           </ConfigProvider>
