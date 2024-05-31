@@ -1,12 +1,11 @@
-import { HardhatUserConfig } from "hardhat/config";
+import { HardhatUserConfig } from "hardhat/config"
 
-import '@typechain/hardhat'
-import '@nomicfoundation/hardhat-ethers'
-import '@nomicfoundation/hardhat-chai-matchers'
-import "@matterlabs/hardhat-zksync";
+import "@matterlabs/hardhat-zksync"
+import "@nomicfoundation/hardhat-ethers"
+import "@typechain/hardhat"
 
 const config: HardhatUserConfig = {
-  defaultNetwork: "zkSyncSepoliaTestnet",
+  defaultNetwork: "inMemoryNode",
   networks: {
     zkSyncSepoliaTestnet: {
       url: "https://sepolia.era.zksync.dev",
@@ -50,6 +49,6 @@ const config: HardhatUserConfig = {
   solidity: {
     version: "0.8.17",
   },
-};
+}
 
-export default config;
+export default config

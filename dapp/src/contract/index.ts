@@ -1,24 +1,17 @@
-import { riddleAbi } from "@/generated"
+export const RIDDLE_CONTRACT_ADDRESS = "0x4768d649Da9927a8b3842108117eC0ca7Bc6953f"
+export const SCHOOL_CONTRACT_ADDRESS = "0x22F4D93be0E8C0C081e74c0d5e697B64eEA007FF"
+export const SCHOOL_PAYMASTER_CONTRACT_ADDRESS = "0xe4C7fBB0a626ed208021ccabA6Be1566905E2dFc"
 
-export const CONTRACT_ADDRESS = "0x2cEdf0Fb5e1c4985B32712E7f34E13D51ee5589E"
-
-export type RiddleItem = RiddleItemGeneric<RiddleAnswer>
-
-export type RiddleItemGeneric<T> = {
-  title: string,
-  description: string,
-  uri: string,
-  answers: T
+export type RiddleItem = {
+  owner: string
+  title: string
+  description: string
+  uri: string
+  answers: string[]
 }
 
-export type RiddleAnswer = {
-  answer_1: string
-  answer_2: string
-  answer_3: string
-  answer_4: string
+export type ExamsMetadata = {
+  name: string
+  description: string
+  date: string
 }
-
-export const RIDDLE_CONTRACTS = {
-  address: CONTRACT_ADDRESS,
-  abi: riddleAbi
-} as const

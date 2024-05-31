@@ -1,12 +1,27 @@
 "use client"
 
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
-import { Button, Card, Flex, Form, FormProps, Input } from "antd"
-import { FC } from "react"
-import { useWriteRiddleCreateItem, useReadRiddleItems, riddleAbi, useReadRiddleItemIndex } from "@/generated"
-import { CONTRACT_ADDRESS, RiddleItem, RiddleItemGeneric } from "@/contract"
-import { useReadContracts } from "wagmi"
+import {
+  RIDDLE_CONTRACT_ADDRESS,
+  RiddleItem,
+} from "@/contract"
+import {
+  useReadRiddleItemIndex,
+  useWriteRiddleCreateItem,
+} from "@/generated"
+import {
+  MinusCircleOutlined,
+  PlusOutlined,
+} from "@ant-design/icons"
+import {
+  Button,
+  Flex,
+  Form,
+  FormProps,
+  Input,
+} from "antd"
 import { useRouter } from "next/navigation"
+import { FC } from "react"
+import { useWalletClient } from "wagmi"
 
 const formItemLayout = {
   labelCol: {
@@ -17,43 +32,44 @@ const formItemLayout = {
     xs: { span: 24 },
     sm: { span: 16 },
   },
-};
+}
 
 const formItemLayoutWithOutLabel = {
   wrapperCol: {
     xs: { span: 24, offset: 0 },
     sm: { span: 20, offset: 8 },
   },
-};
+}
 
 const CreateRiddle: FC = () => {
   const router = useRouter()
 
+  const { data: walletClient } = useWalletClient()
   const { writeContractAsync } = useWriteRiddleCreateItem()
   const { data: itemIndex, isSuccess } = useReadRiddleItemIndex({
-    address: CONTRACT_ADDRESS
+    address: RIDDLE_CONTRACT_ADDRESS,
   })
   // const { writeContract } = useWriteRiddleIncrement()
   console.log(itemIndex, isSuccess)
-  const onFinish: FormProps<RiddleItemGeneric<string[]>>["onFinish"] = async (values) => {
+  const onFinish: FormProps<RiddleItem>["onFinish"] = async (values) => {
     const { answers, ...others } = values
     const riddleItem: RiddleItem = {
       ...others,
-      answers: {
-        answer_1: answers[0],
-        answer_2: answers[1],
-        answer_3: answers[2],
-        answer_4: answers[3],
-      }
+      owner: walletClient?.account.address!,
+      answers: [
+        answers[0],
+        answers[1],
+        answers[2],
+        answers[3],
+      ],
     }
 
-    await writeContractAsync({
-      address: CONTRACT_ADDRESS,
-      args: [riddleItem]
-    })
+    // await writeContractAsync({
+    //   address: RIDDLE_CONTRACT_ADDRESS,
+    //   args: [ riddleItem ],
+    // })
 
     router.push(`/riddle/${Number(itemIndex)}`)
-
   }
 
   return (
@@ -63,31 +79,32 @@ const CreateRiddle: FC = () => {
         variant="outlined"
         className="h-full overflow-auto"
         onFinish={onFinish}
-        style={{ maxWidth: 600 }}>
-        <Form.Item label="Title" name="title" rules={[{ required: true, message: 'Please input!' }]}>
+        style={{ maxWidth: 600 }}
+      >
+        <Form.Item label="Title" name="title" rules={[ { required: true, message: "Please input!" } ]}>
           <Input />
         </Form.Item>
 
         <Form.Item
           label="Description"
           name="description"
-          rules={[{ required: true, message: 'Please input!' }]}
+          rules={[ { required: true, message: "Please input!" } ]}
         >
           <Input.TextArea rows={6} />
         </Form.Item>
-        <Form.Item label="Image" name="uri" rules={[{ required: true, message: 'Please input!' }]}>
+        <Form.Item label="Image" name="uri" rules={[ { required: true, message: "Please input!" } ]}>
           <Input />
         </Form.Item>
         <Form.List
           name="answers"
           initialValue={[
-            ""
+            "",
           ]}
           rules={[
             {
               validator: async (_, names) => {
                 if (!names || names.length < 4) {
-                  return Promise.reject(new Error('At least 4 answers'));
+                  return Promise.reject(new Error("At least 4 answers"))
                 }
               },
             },
@@ -98,13 +115,13 @@ const CreateRiddle: FC = () => {
               {fields.map(({ key, ...others }, index) => (
                 <Form.Item
                   {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                  label={index === 0 ? 'Answers' : ''}
+                  label={index === 0 ? "Answers" : ""}
                   required
                   key={key}
                 >
                   <Form.Item
                     {...others}
-                    validateTrigger={['onChange', 'onBlur']}
+                    validateTrigger={[ "onChange", "onBlur" ]}
                     rules={[
                       {
                         required: true,
@@ -116,13 +133,15 @@ const CreateRiddle: FC = () => {
                   >
                     <Input placeholder={`answer ${index + 1}`} className="!w-2/3" />
                   </Form.Item>
-                  {fields.length > 1 ? (
-                    <MinusCircleOutlined
-                      size={64}
-                      className="mx-3"
-                      onClick={() => remove(others.name)}
-                    />
-                  ) : null}
+                  {fields.length > 1
+                    ? (
+                      <MinusCircleOutlined
+                        size={64}
+                        className="mx-3"
+                        onClick={() => remove(others.name)}
+                      />
+                    )
+                    : null}
                 </Form.Item>
               ))}
               <Form.Item>
@@ -138,8 +157,11 @@ const CreateRiddle: FC = () => {
           )}
         </Form.List>
         <Flex className="mt-10" vertical align="center" gap="middle">
-          <Button className="text-white !px-16 !bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
-            type="primary" htmlType="submit">
+          <Button
+            className="text-white !px-16 !bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
+            type="primary"
+            htmlType="submit"
+          >
             SUBMIT
           </Button>
         </Flex>

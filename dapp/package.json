@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "pregenerate": "cp ../contract/artifacts-zk/contracts/Riddle.sol/Riddle.json .",
+    "pregenerate": "rm abis/* && find ../contract/artifacts-zk/contracts -type f -name \"*.json\" ! -name \"*.dbg.json\" | xargs -I{} cp {} ./abis",
     "generate": "npx wagmi generate"
   },
   "dependencies": {
@@ -21,13 +21,20 @@
     "pino-pretty": "^11.0.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-markdown": "^9.0.1",
+    "rehype-mathjax": "^6.0.0",
+    "remark-gfm": "^4.0.0",
+    "remark-math": "^6.0.0",
+    "uuid": "^9.0.1",
     "viem": "^2.10.8",
-    "wagmi": "^2.8.8"
+    "wagmi": "^2.8.8",
+    "zksync-ethers": "^6.7.1"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/uuid": "^9.0.8",
     "@wagmi/cli": "^2.1.4",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",

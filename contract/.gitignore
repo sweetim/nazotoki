@@ -1,3 +1,6 @@
+typechain-types/
+deployments-zk/
+
 # Logs
 logs
 *.log
@@ -6,9 +9,6 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 .vscode
-
-deployments-zk/
-typechain-types/
 
 # hardhat artifacts
 artifacts

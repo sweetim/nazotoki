@@ -1,15 +1,17 @@
 import "./globals.css"
 
-import type { Metadata } from "next";
-import { Mali } from "next/font/google";
-import { AntdRegistry } from '@ant-design/nextjs-registry';
-import { ConfigProvider, ThemeConfig, theme } from 'antd';
-
+import { AntdRegistry } from "@ant-design/nextjs-registry"
+import {
+  ConfigProvider,
+  ThemeConfig,
+} from "antd"
+import type { Metadata } from "next"
+import { Mali } from "next/font/google"
 
 const mali = Mali({
   weight: "400",
-  subsets: ["latin"]
-});
+  subsets: [ "latin" ],
+})
 
 const antThemeConfig: ThemeConfig = {
   token: {
@@ -17,29 +19,36 @@ const antThemeConfig: ThemeConfig = {
   },
   components: {
     Layout: {
-      bodyBg: "white"
+      bodyBg: "white",
     },
-  }
+    Button: {
+      // defaultBg: "#3d3449",
+      // defaultColor: "white",
+      // defaultBorderColor: "#3d3449",
+      // defaultHoverBg: "#524a5d",
+      // defaultHoverBorderColor: "#524a5d",
+      // defaultHoverColor: "white",
+    },
+  },
 }
 
 export const metadata: Metadata = {
   title: "nazotoki",
   description: "puzzle gameFI",
-};
-
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <html lang="en" className="h-full">
       <body className={`${mali.className} h-full bg-[#281e35]`}>
-          <ConfigProvider theme={antThemeConfig}>
-            <AntdRegistry>{children}</AntdRegistry>
-          </ConfigProvider>
+        <ConfigProvider theme={antThemeConfig}>
+          <AntdRegistry>{children}</AntdRegistry>
+        </ConfigProvider>
       </body>
     </html>
-  );
+  )
 }

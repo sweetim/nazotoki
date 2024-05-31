@@ -5,17 +5,11 @@ import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
 
 contract Riddle {
   struct RiddleItem {
+    address owner;
     string title;
     string description;
     string uri;
-    RiddleAnswer answers;
-  }
-
-  struct RiddleAnswer {
-    string answer_1;
-    string answer_2;
-    string answer_3;
-    string answer_4;
+    string[] answers;
   }
 
   uint public itemIndex;
@@ -23,12 +17,15 @@ contract Riddle {
   mapping(uint => RiddleItem) public items;
   mapping(address => uint) public rankings;
 
+  event RiddleAnswerEvent(address indexed user, uint index, bool isCorrect);
+
   constructor() {
     itemIndex = 0;
   }
 
   function createItem(RiddleItem calldata item) public {
     items[itemIndex] = item;
+    items[itemIndex].owner = msg.sender;
     itemIndex += 1;
   }
 
@@ -38,9 +35,12 @@ contract Riddle {
 
   function submitAnswer(uint index, string calldata answer) public returns (bool) {
     RiddleItem memory riddleItem = items[index];
-    bool isCorrect = keccak256(bytes(riddleItem.answers.answer_1)) == keccak256(bytes(answer));
+    bool isCorrect = keccak256(bytes(riddleItem.answers[0])) == keccak256(bytes(answer));
+
+    emit RiddleAnswerEvent(msg.sender, index, isCorrect);
 
     if (isCorrect) {
+
       uint currentRanking = rankings[msg.sender];
       rankings[msg.sender] = currentRanking + 1;
     }

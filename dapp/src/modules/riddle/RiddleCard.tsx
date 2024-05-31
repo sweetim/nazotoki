@@ -1,106 +1,88 @@
 "use client"
 
-import Image from "next/image";
-import Link from "next/link";
-import { CONTRACT_ADDRESS, RIDDLE_CONTRACTS, RiddleItem } from "@/contract"
-import { Button, Card, Col, Divider, Flex, Modal, Radio, Row, Space } from "antd"
-import { FC, useState } from "react"
-import { useReadRiddleGetItem, useWriteRiddleSubmitAnswer, useReadRiddleItemIndex } from "@/generated"
-import { Typography } from 'antd';
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import {
+  RIDDLE_CONTRACT_ADDRESS,
+  RiddleItem,
+  SCHOOL_PAYMASTER_CONTRACT_ADDRESS,
+} from "@/contract"
+import { riddleAbi } from "@/generated"
+import {
+  Button,
+  ConfigProvider,
+  Divider,
+  Flex,
+  Modal,
+  Radio,
+  Space,
+  Typography,
+} from "antd"
+import Link from "next/link"
+import {
+  FC,
+  useState,
+} from "react"
+import Markdown from "react-markdown"
+import rehypeMathjax from "rehype-mathjax"
+import remarkGfm from "remark-gfm"
+import remarkMath from "remark-math"
+import {
+  createWalletClient,
+  custom,
+} from "viem"
+import { zkSyncInMemoryNode } from "viem/chains"
+import { eip712WalletActions } from "viem/zksync"
+import { useWalletClient } from "wagmi"
+import { utils } from "zksync-ethers"
 
-const { Title, Paragraph } = Typography;
+const { Title, Paragraph } = Typography
 
 type RiddleCardProps = {
   id: string
+  data: RiddleItem
 }
 
-const RiddleCard: FC<RiddleCardProps> = ({ id }) => {
-  // const { data, isSuccess } = useReadContracts({
-  //   contracts: Array(1).fill(0).map((_, i) => ({
-  //     ...RIDDLE_CONTRACTS,
-  //     functionName: "getItem",
-  //     args: [BigInt(1)]
-  //   }))
-  // })
-
-  const [answer, setAnswer] = useState("")
-
-  const { writeContractAsync } = useWriteRiddleSubmitAnswer()
-
-  const { data, isSuccess } = useReadRiddleGetItem({
-    address: CONTRACT_ADDRESS,
-    args: [BigInt(id)]
-  })
-
-  const { data: itemIndex, isSuccess: itemIndexIsSuccess } = useReadRiddleItemIndex({
-    address: CONTRACT_ADDRESS
-  })
-
-  const renderLoading = () => (
-    <Image
-      src="/loading.gif"
-      width={250}
-      height={250}
-      alt="loading..." />
-  )
+const RiddleCard: FC<RiddleCardProps> = ({ id, data }) => {
+  const [ answer, setAnswer ] = useState("")
+  const { data: walletClient } = useWalletClient()
 
   const submitClickHandler = async () => {
-    // await writeContractAsync({
-    //   address: CONTRACT_ADDRESS,
-    //   args: [
-    //     BigInt(id),
-    //     answer
-    //   ]
-    // })
+    const zkSyncWalletClient = createWalletClient({
+      chain: zkSyncInMemoryNode,
+      transport: custom((window as any).ethereum),
+    }).extend(eip712WalletActions())
 
-    if (answer === data?.answers.answer_1) {
-      // alert("Correct")
-      showModal()
-    }
+    const paymasterParams = utils.getPaymasterParams(
+      SCHOOL_PAYMASTER_CONTRACT_ADDRESS,
+      {
+        type: "General",
+        innerInput: new Uint8Array(),
+      },
+    )
+
+    await zkSyncWalletClient.writeContract({
+      account: walletClient?.account!,
+      abi: riddleAbi,
+      address: RIDDLE_CONTRACT_ADDRESS,
+      functionName: "submitAnswer",
+      args: [
+        BigInt(0),
+        "50",
+      ],
+    })
   }
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [ isModalOpen, setIsModalOpen ] = useState(false)
 
   const showModal = () => {
-    setIsModalOpen(true);
-  };
+    setIsModalOpen(true)
+  }
 
   const handleOk = () => {
-    setIsModalOpen(false);
-  };
+    setIsModalOpen(false)
+  }
 
   const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
-  const renderRiddleAvailable = () => {
-    return (
-      <>
-        <Title className="text-center">{data!.title}</Title>
-        <Divider className="h-0.5 bg-[#281e35]" />
-        <Paragraph className="max-w-3xl px-10 text-center">
-          {data!.description}
-        </Paragraph>
-        <Flex className="mt-10" vertical align="center" gap="middle">
-          <Space size="large" direction="vertical" align="center">
-            <Radio.Group onChange={(e) => setAnswer(e.target.value)} value={answer} size="large" buttonStyle="solid">
-              <Radio.Button className="!px-12" value={data!.answers.answer_1}>{data!.answers.answer_1}</Radio.Button>
-              <Radio.Button className="!px-12" value={data!.answers.answer_2}>{data!.answers.answer_2}</Radio.Button>
-              <Radio.Button className="!px-12" value={data!.answers.answer_3}>{data!.answers.answer_3}</Radio.Button>
-              <Radio.Button className="!px-12" value={data!.answers.answer_4}>{data!.answers.answer_4}</Radio.Button>
-            </Radio.Group>
-            <Button size="large"
-              shape="round"
-              className="!text-white !px-16 !bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
-              onClick={submitClickHandler}>SUBMIT</Button>
-            <Modal title="CONGRATULATIONS" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-              <p>Your answer is CORRECT</p>
-            </Modal>
-          </Space>
-        </Flex>
-      </>
-    )
+    setIsModalOpen(false)
   }
 
   const renderNoRiddleAvailable = () => {
@@ -113,58 +95,73 @@ const RiddleCard: FC<RiddleCardProps> = ({ id }) => {
         </Paragraph>
         <Flex className="mt-10" vertical align="center" gap="middle">
           <Link href="/create">
-            <Button size="large"
+            <Button
+              size="large"
               shape="round"
               className="!text-white !px-16 !bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
-              onClick={submitClickHandler}>CLAIM</Button>
+              onClick={submitClickHandler}
+            >
+              CLAIM
+            </Button>
           </Link>
         </Flex>
       </>
     )
   }
 
-  const isDataAvailable = itemIndex && itemIndex > Number(id)
-  const renderRiddleAnswer = () => (
-    <Card>
-      <Row>
-        <Col>
-          <Flex className="w-full h-full"
-            justify="center"
-            align="center"
-            vertical>
-            <Flex justify="center" align="center">
-              <Link href={`/riddle/${Number(id) - 1}`}>
-                <LeftOutlined />
-              </Link>
-            </Flex>
-          </Flex>
-        </Col>
-        <Col flex="auto">
-          {isDataAvailable
-            ? renderRiddleAvailable()
-            : renderNoRiddleAvailable()}
-        </Col>
-        <Col>
-          <Flex className="w-full h-full"
-            justify="center"
-            align="center"
-            vertical>
-            <Flex justify="center" align="center">
-              <Link href={`/riddle/${Number(id) + 1}`}>
-                <RightOutlined />
-              </Link>
-            </Flex>
-          </Flex>
-        </Col>
-      </Row>
-    </Card>
-  )
-
   return (
-    <>
-      {isSuccess ? renderRiddleAnswer() : renderLoading()}
-    </>
+    <div>
+      <Title className="text-center">{data!.title}</Title>
+      <Divider className="h-0.5 bg-[#281e35]" />
+      <Markdown
+        className="px-5 text-xl"
+        rehypePlugins={[ rehypeMathjax ]}
+        remarkPlugins={[ remarkGfm, remarkMath ]}
+      >
+        {data!.description}
+      </Markdown>
+      <ConfigProvider
+        theme={{
+          components: {
+            Radio: {
+              buttonBg: "#3d3449",
+              buttonColor: "white",
+              buttonSolidCheckedHoverBg: "rgb(241,68,62)",
+              buttonSolidCheckedBg: "rgb(241,68,62)",
+            },
+            Button: {
+              defaultColor: "white",
+              defaultHoverBorderColor: "black",
+              defaultHoverColor: "black",
+            },
+          },
+        }}
+      >
+        <Flex className="mt-10" vertical align="center" gap="middle">
+          <Space size="large" direction="vertical" align="center">
+            <Radio.Group onChange={(e) => setAnswer(e.target.value)} value={answer} size="large" buttonStyle="solid">
+              {data!.answers.map(answer => (
+                <Radio.Button key={answer} className="!border-none !px-12" value={answer}>
+                  {answer}
+                </Radio.Button>
+              ))}
+            </Radio.Group>
+            <Button
+              size="large"
+              shape="round"
+              className="!px-16 !bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
+              onClick={submitClickHandler}
+            >
+              SUBMIT
+            </Button>
+            <Modal title="CONGRATULATIONS" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+              <p>Your answer is CORRECT</p>
+            </Modal>
+          </Space>
+        </Flex>
+      </ConfigProvider>
+    </div>
   )
 }
-
+// bg-[#3d3449] !hover:bg-[#524a5d]
 export default RiddleCard
