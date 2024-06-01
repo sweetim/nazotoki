@@ -1,19 +1,9 @@
 "use client"
 
 import { RiddleItem } from "@/contract"
+import { RiddleContainer } from "@/modules/riddle"
 import RiddleCard from "@/modules/riddle/RiddleCard"
-import {
-  LeftOutlined,
-  RightOutlined,
-} from "@ant-design/icons"
-import {
-  Card,
-  Col,
-  Flex,
-  Row,
-} from "antd"
 import Image from "next/image"
-import Link from "next/link"
 import { FC } from "react"
 
 type RiddlePageProps = {
@@ -37,7 +27,7 @@ const RiddlePage: FC<RiddlePageProps> = ({ params }) => {
     uri: "asassas",
     answers: [
       "30",
-      "20",
+      "53",
       "50",
       "51",
     ],
@@ -53,35 +43,9 @@ const RiddlePage: FC<RiddlePageProps> = ({ params }) => {
   )
 
   return (
-    <Flex className="w-full h-full bg-[#281e35]" justify="center" align="center" vertical>
-      <Flex justify="center" align="center">
-        <Card>
-          <Row>
-            <Col>
-              <Flex className="w-full h-full" justify="center" align="center" vertical>
-                <Flex justify="center" align="center">
-                  <Link href={`/riddle/${Number(id) - 1}`}>
-                    <LeftOutlined />
-                  </Link>
-                </Flex>
-              </Flex>
-            </Col>
-            <Col flex="auto">
-              <RiddleCard id={id} data={data} />
-            </Col>
-            <Col>
-              <Flex className="w-full h-full" justify="center" align="center" vertical>
-                <Flex justify="center" align="center">
-                  <Link href={`/riddle/${Number(id) + 1}`}>
-                    <RightOutlined />
-                  </Link>
-                </Flex>
-              </Flex>
-            </Col>
-          </Row>
-        </Card>
-      </Flex>
-    </Flex>
+    <RiddleContainer id={id}>
+      <RiddleCard id={id} data={data} />
+    </RiddleContainer>
   )
 }
 

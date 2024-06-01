@@ -11,7 +11,6 @@ import {
   ConfigProvider,
   Divider,
   Flex,
-  Modal,
   Radio,
   Space,
   Typography,
@@ -68,21 +67,10 @@ const RiddleCard: FC<RiddleCardProps> = ({ id, data }) => {
         BigInt(0),
         "50",
       ],
+      maxPriorityFeePerGas: BigInt(0),
+      paymaster: paymasterParams.paymaster as `0x${string}`,
+      paymasterInput: paymasterParams.paymasterInput as `0x${string}`,
     })
-  }
-
-  const [ isModalOpen, setIsModalOpen ] = useState(false)
-
-  const showModal = () => {
-    setIsModalOpen(true)
-  }
-
-  const handleOk = () => {
-    setIsModalOpen(false)
-  }
-
-  const handleCancel = () => {
-    setIsModalOpen(false)
   }
 
   const renderNoRiddleAvailable = () => {
@@ -110,7 +98,7 @@ const RiddleCard: FC<RiddleCardProps> = ({ id, data }) => {
   }
 
   return (
-    <div>
+    <div className="bg-white p-5 rounded-3xl">
       <Title className="text-center">{data!.title}</Title>
       <Divider className="h-0.5 bg-[#281e35]" />
       <Markdown
@@ -131,8 +119,8 @@ const RiddleCard: FC<RiddleCardProps> = ({ id, data }) => {
             },
             Button: {
               defaultColor: "white",
-              defaultHoverBorderColor: "black",
-              defaultHoverColor: "black",
+              defaultHoverBorderColor: "none",
+              defaultHoverColor: "none",
             },
           },
         }}
@@ -146,17 +134,23 @@ const RiddleCard: FC<RiddleCardProps> = ({ id, data }) => {
                 </Radio.Button>
               ))}
             </Radio.Group>
-            <Button
+            {
+              /* <Button
               size="large"
               shape="round"
               className="!px-16 !bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
               onClick={submitClickHandler}
             >
               SUBMIT
-            </Button>
-            <Modal title="CONGRATULATIONS" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-              <p>Your answer is CORRECT</p>
-            </Modal>
+            </Button> */
+            }
+            <div onClick={submitClickHandler} className="cursor-pointer relative inline-flex group">
+              <div className="absolute transitiona-all duration-1000 opacity-20 -inset-px bg-gradient-to-r from-[#44BCFF] via-[#FF44EC] to-[#FF675E] rounded-xl blur-lg group-hover:opacity-50 group-hover:-inset-1 group-hover:duration-200 animate-tilt">
+              </div>
+              <button className="px-16 py-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full">
+                <h2 className="text-white">SUBMIT</h2>
+              </button>
+            </div>
           </Space>
         </Flex>
       </ConfigProvider>

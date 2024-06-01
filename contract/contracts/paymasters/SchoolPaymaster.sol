@@ -7,7 +7,9 @@ import {TransactionHelper, Transaction} from "@matterlabs/zksync-contracts/l2/sy
 
 import "@matterlabs/zksync-contracts/l2/system-contracts/Constants.sol";
 
-contract SchoolPaymaster is IPaymaster {
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract SchoolPaymaster is IPaymaster, Ownable {
     modifier onlyBootloader() {
         require(
             msg.sender == BOOTLOADER_FORMAL_ADDRESS,
@@ -27,7 +29,6 @@ contract SchoolPaymaster is IPaymaster {
         onlyBootloader
         returns (bytes4 magic, bytes memory context)
     {
-        // By default we consider the transaction as accepted.
         magic = PAYMASTER_VALIDATION_SUCCESS_MAGIC;
         require(
             _transaction.paymasterInput.length >= 4,
@@ -37,7 +38,7 @@ contract SchoolPaymaster is IPaymaster {
         bytes4 paymasterInputSelector = bytes4(
             _transaction.paymasterInput[0:4]
         );
-        if (paymasterInputSelector == IPaymasterFlow.approvalBased.selector) {
+        if (paymasterInputSelector == IPaymasterFlow.general.selector) {
             // Note, that while the minimal amount of ETH needed is tx.gasPrice * tx.gasLimit,
             // neither paymaster nor account are allowed to access this context variable.
             uint256 requiredETH = _transaction.gasLimit *
@@ -49,10 +50,10 @@ contract SchoolPaymaster is IPaymaster {
             }("");
             require(
                 success,
-                "Failed to transfer tx fee to the bootloader. Paymaster balance might not be enough."
+                "Failed to transfer tx fee to the Bootloader. Paymaster balance might not be enough."
             );
         } else {
-            revert("Unsupported paymaster flow");
+            revert("Unsupported paymaster flow in paymasterParams.");
         }
     }
 
@@ -63,7 +64,12 @@ contract SchoolPaymaster is IPaymaster {
         bytes32,
         ExecutionResult _txResult,
         uint256 _maxRefundedGas
-    ) external payable override onlyBootloader {
+    ) external payable override onlyBootloader {}
+
+    function withdraw(address payable _to) external onlyOwner {
+        uint256 balance = address(this).balance;
+        (bool success, ) = _to.call{value: balance}("");
+        require(success, "Failed to withdraw funds from paymaster.");
     }
 
     receive() external payable {}
