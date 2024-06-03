@@ -17,19 +17,6 @@ const antThemeConfig: ThemeConfig = {
   token: {
     fontFamily: "mali",
   },
-  components: {
-    Layout: {
-      bodyBg: "white",
-    },
-    Button: {
-      // defaultBg: "#3d3449",
-      // defaultColor: "white",
-      // defaultBorderColor: "#3d3449",
-      // defaultHoverBg: "#524a5d",
-      // defaultHoverBorderColor: "#524a5d",
-      // defaultHoverColor: "white",
-    },
-  },
 }
 
 export const metadata: Metadata = {

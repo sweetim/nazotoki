@@ -18,10 +18,12 @@ const RiddlePage: FC<RiddlePageProps> = ({ params }) => {
   const data: RiddleItem = {
     title: "Sum of Square",
     description: `find the value of this equation
-    $$
-    \\displaystyle\\sum_{k=3}^5 k^2+1 = ?
-    $$
-
+    \n &nbsp;
+$$
+\\begin{align*}
+\\displaystyle\\sum_{k=3}^5 k^2+1 = ?
+\\end{align*}
+$$
       `,
     owner: "",
     uri: "asassas",

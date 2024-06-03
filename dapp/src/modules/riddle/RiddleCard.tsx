@@ -15,15 +15,17 @@ import {
   Space,
   Typography,
 } from "antd"
+import "katex/dist/katex.min.css"
 import Link from "next/link"
 import {
   FC,
   useState,
 } from "react"
 import Markdown from "react-markdown"
-import rehypeMathjax from "rehype-mathjax"
+import rehypeKatex from "rehype-katex"
 import remarkGfm from "remark-gfm"
 import remarkMath from "remark-math"
+
 import {
   createWalletClient,
   custom,
@@ -103,7 +105,7 @@ const RiddleCard: FC<RiddleCardProps> = ({ id, data }) => {
       <Divider className="h-0.5 bg-[#281e35]" />
       <Markdown
         className="px-5 text-xl"
-        rehypePlugins={[ rehypeMathjax ]}
+        rehypePlugins={[ rehypeKatex ]}
         remarkPlugins={[ remarkGfm, remarkMath ]}
       >
         {data!.description}
@@ -134,16 +136,6 @@ const RiddleCard: FC<RiddleCardProps> = ({ id, data }) => {
                 </Radio.Button>
               ))}
             </Radio.Group>
-            {
-              /* <Button
-              size="large"
-              shape="round"
-              className="!px-16 !bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
-              onClick={submitClickHandler}
-            >
-              SUBMIT
-            </Button> */
-            }
             <div onClick={submitClickHandler} className="cursor-pointer relative inline-flex group">
               <div className="absolute transitiona-all duration-1000 opacity-20 -inset-px bg-gradient-to-r from-[#44BCFF] via-[#FF44EC] to-[#FF675E] rounded-xl blur-lg group-hover:opacity-50 group-hover:-inset-1 group-hover:duration-200 animate-tilt">
               </div>
@@ -157,5 +149,5 @@ const RiddleCard: FC<RiddleCardProps> = ({ id, data }) => {
     </div>
   )
 }
-// bg-[#3d3449] !hover:bg-[#524a5d]
+
 export default RiddleCard
