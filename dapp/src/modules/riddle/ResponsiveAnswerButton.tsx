@@ -18,7 +18,6 @@ const ResponsiveAnswerButton: FC<ResponsiveAnswerButtonProps> = ({ answers }) =>
   const olClassName = useMemo(() =>
     classnames("", {
       "flex flex-row": !isAnswerLong,
-      "w-full": isAnswerLong,
     }), [])
 
   const liClassName = useCallback((i: number) =>
