@@ -11,7 +11,6 @@ import {
   ConfigProvider,
   Divider,
   Flex,
-  Radio,
   Space,
   Typography,
 } from "antd"
@@ -34,6 +33,7 @@ import { zkSyncInMemoryNode } from "viem/chains"
 import { eip712WalletActions } from "viem/zksync"
 import { useWalletClient } from "wagmi"
 import { utils } from "zksync-ethers"
+import ResponsiveAnswerButton from "./ResponsiveAnswerButton"
 
 const { Title, Paragraph } = Typography
 
@@ -100,7 +100,7 @@ const RiddleCard: FC<RiddleCardProps> = ({ id, data }) => {
   }
 
   return (
-    <div className="bg-white p-5 rounded-3xl">
+    <div className="bg-white p-5 rounded-3xl max-w-3xl">
       {data.answers.length === 0 ? null : (
         <>
           <Title className="text-center">{data!.title}</Title>
@@ -134,13 +134,7 @@ const RiddleCard: FC<RiddleCardProps> = ({ id, data }) => {
         <Flex className="mt-10" vertical align="center" gap="middle">
           {data.answers.length === 0 ? null : (
             <Space size="large" direction="vertical" align="center">
-              <Radio.Group onChange={(e) => setAnswer(e.target.value)} value={answer} size="large" buttonStyle="solid">
-                {data!.answers.map(answer => (
-                  <Radio.Button key={answer} className="!border-none !px-12" value={answer}>
-                    {answer}
-                  </Radio.Button>
-                ))}
-              </Radio.Group>
+              <ResponsiveAnswerButton answers={data!.answers} />
               <div onClick={submitClickHandler} className="cursor-pointer relative inline-flex group">
                 <div className="absolute transitiona-all duration-1000 opacity-20 -inset-px bg-gradient-to-r from-[#44BCFF] via-[#FF44EC] to-[#FF675E] rounded-xl blur-lg group-hover:opacity-50 group-hover:-inset-1 group-hover:duration-200 animate-tilt">
                 </div>
